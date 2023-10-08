@@ -31,18 +31,10 @@ const addBooks = async (req, res) => {
       { timeZone: ISTTimeZone }
     );
 
-    let fine = 0;
-    const timeDifference = new Date(returnDate) - new Date(currentISTTime);
-    if (timeDifference > 60 * 60 * 1000) {
-      const additionalHours = Math.ceil(timeDifference / (60 * 60 * 1000)) - 1;
-      fine = additionalHours * 10;
-    }
-
     const newBook = await Books.create({
       name: book,
       issueDate: currentISTTime, // Use the current IST time
       returnDate: returnDate,
-      fine: fine,
     });
 
     console.log(newBook);
@@ -53,4 +45,18 @@ const addBooks = async (req, res) => {
   }
 };
 
-module.exports = { getAllBooks, addBooks };
+const removeBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const book = await Books.findByPk(id);
+
+    if (book) await book.destroy();
+
+    res.status(201).send(`Removed Book==> ${book}`);
+  } catch (error) {
+    res.status(404).send(`failed to remove book ==>Server Side , ${error}`);
+  }
+};
+
+module.exports = { getAllBooks, addBooks, removeBook };

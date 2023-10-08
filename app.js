@@ -9,6 +9,7 @@ const db = require("./server/models/db");
 const cors = require("cors");
 
 const bookRouter = require("./server/routes/routes");
+const returnBook = require("./server/routes/routes2");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/api/books", bookRouter);
+app.use("/api/return", returnBook);
 
 app.use(express.static(path.join(__dirname, "client")));
 
